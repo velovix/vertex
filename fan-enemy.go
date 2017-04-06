@@ -33,8 +33,11 @@ type fanEnemy struct {
 	bouncers               map[direction]*collision
 }
 
-func newFanEnemy(loc vertex) (*fanEnemy, error) {
+func newFanEnemy(loc vertex) *fanEnemy {
 	fe := new(fanEnemy)
+
+	fe.loc = loc
+	fe.hp = fanEnemyMaxHP
 
 	// Start moving around in a random direction
 	fe.moveDir = unitVectorFromAngle(360.0 * rand.Float64())
@@ -46,6 +49,7 @@ func newFanEnemy(loc vertex) (*fanEnemy, error) {
 	fe.vulnerability = collision{
 		alliance: unfriendly,
 		typ:      vulnerable}
+	fe.bouncers = make(map[direction]*collision)
 	for _, dir := range []direction{up, down, left, right} {
 		fe.bouncers[dir] = &collision{
 			alliance: unfriendly,
@@ -53,7 +57,7 @@ func newFanEnemy(loc vertex) (*fanEnemy, error) {
 	}
 	fe.updateCols()
 
-	return fe, nil
+	return fe
 }
 
 func (fe *fanEnemy) tick() []entity {

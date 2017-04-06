@@ -38,6 +38,16 @@ type physicalEntity interface {
 	mass() float64
 }
 
+// inFrameEntity is an entity that should always be in frame. A player entity,
+// for instance. Entities need to physically exist to effect camera location.
+type inFrameEntity interface {
+	physicalEntity
+
+	// inFrame means nothing, but should be implemented by those who want to be
+	// always in frame.
+	inFrame()
+}
+
 // inputEntity represents an entity that needs to know about user input.
 type inputEntity interface {
 	entity
@@ -58,19 +68,5 @@ type snoopingEntity interface {
 	entityDestruction(e entity)
 
 	// entityMove is called when an entity moves around.
-	entityMove(e entity, loc vertex)
-}
-
-// physicalInputEntity is a combination of a physicalEntity and an inputEntity.
-// See documentation for those interfaces.
-type physicalInputEntity interface {
-	entity
-
-	draw()
-	location() vertex
-	collisions() []collision
-	collision(yours, other collision)
-	mass() float64
-	joystickAxis(joystick glfw.Joystick, axes []float32)
-	joystickButton(joystick glfw.Joystick, buttons []byte)
+	entityMove(e physicalEntity, loc vertex)
 }

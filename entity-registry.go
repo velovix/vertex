@@ -15,22 +15,24 @@ type entityRegistry struct {
 	physicals []physicalEntity
 	inputters []inputEntity
 	snoopers  []snoopingEntity
+	inFramers []inFrameEntity
 }
 
 // addEntity adds an entity to the registry.
 func (er *entityRegistry) addEntity(e entity) {
 	er.entities = append(er.entities, e)
 
-	switch t := e.(type) {
-	case physicalInputEntity:
-		er.physicals = append(er.physicals, t)
-		er.inputters = append(er.inputters, t)
-	case physicalEntity:
-		er.physicals = append(er.physicals, t)
-	case inputEntity:
-		er.inputters = append(er.inputters, t)
-	case snoopingEntity:
-		er.snoopers = append(er.snoopers, t)
+	if physical, ok := e.(physicalEntity); ok {
+		er.physicals = append(er.physicals, physical)
+	}
+	if inputter, ok := e.(inputEntity); ok {
+		er.inputters = append(er.inputters, inputter)
+	}
+	if snooper, ok := e.(snoopingEntity); ok {
+		er.snoopers = append(er.snoopers, snooper)
+	}
+	if inFramer, ok := e.(inFrameEntity); ok {
+		er.inFramers = append(er.inFramers, inFramer)
 	}
 }
 
@@ -52,7 +54,7 @@ func (er *entityRegistry) tick() {
 			newEnts = pe.tick()
 			newLoc := pe.location()
 			if newLoc != oldLoc {
-				er.moveEvent(e, newLoc)
+				er.moveEvent(pe, newLoc)
 			}
 		} else {
 			newEnts = e.tick()
@@ -70,6 +72,7 @@ func (er *entityRegistry) tick() {
 		}
 	}
 
+	// Test for collisions between entities
 	for i := 0; i < len(er.physicals); i++ {
 		for j := i + 1; j < len(er.physicals); j++ {
 			er.interact(er.physicals[i], er.physicals[j])
@@ -77,6 +80,7 @@ func (er *entityRegistry) tick() {
 	}
 }
 
+// interact has the two given entities' collisions interact with each other.
 func (er *entityRegistry) interact(pe1 physicalEntity, pe2 physicalEntity) {
 	cols1 := pe1.collisions()
 	cols2 := pe2.collisions()
@@ -92,7 +96,7 @@ func (er *entityRegistry) interact(pe1 physicalEntity, pe2 physicalEntity) {
 }
 
 // moveEvent notifies all snooping entities that the given entity has moved.
-func (er *entityRegistry) moveEvent(e entity, loc vertex) {
+func (er *entityRegistry) moveEvent(e physicalEntity, loc vertex) {
 	for _, se := range er.snoopers {
 		se.entityMove(e, loc)
 	}

@@ -90,3 +90,6 @@ func (ss *spaceShip) updateCols() {
 func (ss *spaceShip) deletable() bool {
 	return false
 }
+
+func (ss *spaceShip) inFrame() {
+}

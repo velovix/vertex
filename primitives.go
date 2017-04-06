@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 type direction int
 
 const (
@@ -15,6 +17,26 @@ type vertex struct {
 
 type bounding struct {
 	a, b vertex
+}
+
+func (a vertex) distance(b vertex) float64 {
+	return math.Sqrt(math.Pow(b.x-a.x, 2) + math.Pow(b.y-a.y, 2))
+}
+
+func (a vertex) subtract(b vertex) vertex {
+	return vertex{a.x - b.x, a.y - b.y, a.z - b.z}
+}
+
+func normalize(v vertex) vertex {
+	sum := math.Abs(v.x) + math.Abs(v.y) + math.Abs(v.z)
+	if sum == 0 {
+		sum = 1
+	}
+
+	return vertex{
+		x: v.x / sum,
+		y: v.y / sum,
+		z: v.z / sum}
 }
 
 func unitVectorFromAngle(angle float64) vertex {

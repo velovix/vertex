@@ -56,16 +56,27 @@ func main() {
 		panic(errors.Wrap(err, "loading models"))
 	}
 
+	gameplayReg.addEntity(&mainCamera)
+	gameplayReg.addEntity(newGrid(defaultWidth*2, defaultHeight*2))
 	gameplayReg.addEntity(newSpaceShip())
+	gameplayReg.addEntity(newFanEnemy(vertex{0, 0, 0}))
 
 	currentReg = &gameplayReg
 
 	for !glfwWin.ShouldClose() {
 		drawFrame(glfwWin)
+		tick()
+
+		mainWindow.calcDelta()
 
 		glfw.PollEvents()
 	}
 
+}
+
+// tick runs per-frame non-graphical operations.
+func tick() {
+	currentReg.tick()
 }
 
 // drawFrame draws a single frame to the framebuffer.
@@ -114,6 +125,9 @@ func initGL() error {
 	gl.Lightfv(gl.LIGHT0, gl.DIFFUSE, fPtr(lightDiffuse))
 	gl.Lightfv(gl.LIGHT0, gl.SPECULAR, fPtr(lightSpecular))
 	gl.Lightfv(gl.LIGHT0, gl.POSITION, fPtr(lightPos))
+
+	// Size up the viewing area and camera
+	onResize(nil, defaultWidth, defaultHeight)
 
 	return nil
 }
