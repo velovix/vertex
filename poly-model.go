@@ -49,9 +49,9 @@ func objToDisplayList(objs map[string]*wavefront.Object) uint32 {
 
 	for _, obj := range objs {
 		for _, group := range obj.Groups {
-			gl.Materialfv(gl.FRONT, gl.AMBIENT, (*float32)(gl.Ptr(group.Material.Ambient)))
-			gl.Materialfv(gl.FRONT, gl.DIFFUSE, (*float32)(gl.Ptr(group.Material.Diffuse)))
-			gl.Materialfv(gl.FRONT, gl.SPECULAR, (*float32)(gl.Ptr(group.Material.Specular)))
+			gl.Materialfv(gl.FRONT, gl.AMBIENT, fPtr(group.Material.Ambient))
+			gl.Materialfv(gl.FRONT, gl.DIFFUSE, fPtr(group.Material.Diffuse))
+			gl.Materialfv(gl.FRONT, gl.SPECULAR, fPtr(group.Material.Specular))
 			gl.Materialf(gl.FRONT, gl.SHININESS, group.Material.Shininess)
 
 			gl.Begin(gl.TRIANGLES)

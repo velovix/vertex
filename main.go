@@ -99,7 +99,7 @@ func initGL() error {
 
 	// Set global lighting configuration
 	lightModelAmbient := []float32{0.2, 0.2, 0.2, 1.0}
-	gl.LightModelfv(gl.LIGHT_MODEL_AMBIENT, (*float32)(gl.Ptr(lightModelAmbient)))
+	gl.LightModelfv(gl.LIGHT_MODEL_AMBIENT, fPtr(lightModelAmbient))
 	gl.LightModeli(gl.LIGHT_MODEL_LOCAL_VIEWER, gl.FALSE)
 
 	// Configure LIGHT0
@@ -110,10 +110,10 @@ func initGL() error {
 		lightPos      = []float32{0.33, 0.33, 0.33, 0}
 	)
 
-	gl.Lightfv(gl.LIGHT0, gl.AMBIENT, (*float32)(gl.Ptr(lightAmbient)))
-	gl.Lightfv(gl.LIGHT0, gl.DIFFUSE, (*float32)(gl.Ptr(lightDiffuse)))
-	gl.Lightfv(gl.LIGHT0, gl.SPECULAR, (*float32)(gl.Ptr(lightSpecular)))
-	gl.Lightfv(gl.LIGHT0, gl.POSITION, (*float32)(gl.Ptr(lightPos)))
+	gl.Lightfv(gl.LIGHT0, gl.AMBIENT, fPtr(lightAmbient))
+	gl.Lightfv(gl.LIGHT0, gl.DIFFUSE, fPtr(lightDiffuse))
+	gl.Lightfv(gl.LIGHT0, gl.SPECULAR, fPtr(lightSpecular))
+	gl.Lightfv(gl.LIGHT0, gl.POSITION, fPtr(lightPos))
 
 	return nil
 }
