@@ -1,0 +1,45 @@
+{
+    "memo": "dcc5d23d40951c7d95a72bbcdb8a269e2fb6121f30a528e730fc2a749f876013",
+    "projects": [
+        {
+            "name": "github.com/go-gl/gl",
+            "branch": "master",
+            "revision": "b303bcb3e83b7ef645a5104e1c2db7f8d9e8918a",
+            "packages": [
+                "v2.1/gl"
+            ]
+        },
+        {
+            "name": "github.com/go-gl/glfw",
+            "branch": "master",
+            "revision": "4ac11c9fc37480dabfb399c2f9c8731689cee416",
+            "packages": [
+                "v3.0/glfw"
+            ]
+        },
+        {
+            "name": "github.com/lukevers/glu",
+            "branch": "master",
+            "revision": "f41f378fc8c16d306ece7bc2a4f8ba1b86280640",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/peterhellberg/wavefront",
+            "branch": "master",
+            "revision": "3dce7c0fdfb4f4212d32f317b9539ef83a950fdd",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/pkg/errors",
+            "version": "v0.8.0",
+            "revision": "645ef00459ed84a119197bfb8d8205042c6df63d",
+            "packages": [
+                "."
+            ]
+        }
+    ]
+}
