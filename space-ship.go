@@ -8,6 +8,7 @@ var (
 	spaceShipColSize       = 80.0
 	spaceShipMaxHP         = 1
 	spaceShipShootCooldown = 5.0
+	spaceShipBulletSpeed   = 20.0
 	spaceShipMass          = 5.0
 	spaceShipSpeed         = 5.0
 
@@ -22,12 +23,13 @@ var (
 type spaceShip struct {
 	uidGenerator
 
-	x, y, rot float64
-	moveDir   vertex
+	loc     vertex
+	rot     float64
+	moveDir vertex
 
 	hp int
 
-	barrel           int
+	barrel           bool
 	shootingCooldown float64
 	shooting         bool
 
@@ -36,6 +38,8 @@ type spaceShip struct {
 
 func newSpaceShip() *spaceShip {
 	ss := new(spaceShip)
+
+	ss.hp = spaceShipMaxHP
 
 	// Initailize collisions
 	ss.vulnerability = collision{
@@ -47,13 +51,27 @@ func newSpaceShip() *spaceShip {
 }
 
 func (ss *spaceShip) tick() []entity {
-	return []entity{}
+	var newEnts []entity
+
+	ss.loc.x += (spaceShipSpeed * mainWindow.delta) * ss.moveDir.x
+	ss.loc.y += (spaceShipSpeed * mainWindow.delta) * ss.moveDir.y
+
+	if ss.shootingCooldown > 0 {
+		ss.shootingCooldown -= 1.0 * mainWindow.delta
+	} else if ss.shooting {
+		// Shoot a bullet
+		newEnts = append(newEnts, ss.shoot())
+	}
+
+	ss.updateCols()
+
+	return newEnts
 }
 
 func (ss *spaceShip) draw() {
 	gl.PushMatrix()
 
-	gl.Translated(ss.x, ss.y, 0.0)
+	gl.Translated(ss.loc.x, ss.loc.y, 0.0)
 	gl.Rotated(ss.rot, 0, 0, 1)
 	gl.Scaled(spaceShipScale.x, spaceShipScale.y, spaceShipScale.z)
 
@@ -62,8 +80,29 @@ func (ss *spaceShip) draw() {
 	gl.PopMatrix()
 }
 
+// shoot returns a bullet that is set up to be shot.
+func (ss *spaceShip) shoot() *bullet {
+	// Find the position of the gun tip where the bullet will be shot
+	var rotatedGunTip vertex
+	if ss.barrel {
+		rotatedGunTip = rotateVertex(vertex{0.0, 0.0, 0.0}, spaceShipGunTip1, ss.rot)
+	} else {
+		rotatedGunTip = rotateVertex(vertex{0.0, 0.0, 0.0}, spaceShipGunTip2, ss.rot)
+	}
+	// Switch barrels for next shot
+	ss.barrel = !ss.barrel
+	ss.shootingCooldown = spaceShipShootCooldown
+
+	return newBullet(bulletPosData{
+		loc:     vertex{ss.loc.x + rotatedGunTip.x, ss.loc.y + rotatedGunTip.y, 0.0},
+		rot:     ss.rot,
+		moveDir: unitVectorFromAngle(ss.rot),
+		speed:   spaceShipBulletSpeed,
+	}, friendly)
+}
+
 func (ss *spaceShip) location() vertex {
-	return vertex{x: ss.x, y: ss.y}
+	return ss.loc
 }
 
 func (ss *spaceShip) collisions() []collision {
@@ -73,6 +112,12 @@ func (ss *spaceShip) collisions() []collision {
 }
 
 func (ss *spaceShip) collision(yours, other collision) {
+	switch other.typ {
+	case harmful:
+		if yours.uid() == ss.vulnerability.uid() && other.alliance != friendly {
+			ss.hp--
+		}
+	}
 }
 
 func (ss *spaceShip) mass() float64 {
@@ -82,13 +127,13 @@ func (ss *spaceShip) mass() float64 {
 func (ss *spaceShip) updateCols() {
 	ss.vulnerability.bounding = bounding{
 		vertex{
-			ss.x - spaceShipColSize/2.0, ss.y - spaceShipColSize/2.0, 0.0},
+			ss.loc.x - spaceShipColSize/2.0, ss.loc.y - spaceShipColSize/2.0, 0.0},
 		vertex{
-			ss.x + spaceShipColSize/2.0, ss.y + spaceShipColSize/2.0, 0.0}}
+			ss.loc.x + spaceShipColSize/2.0, ss.loc.y + spaceShipColSize/2.0, 0.0}}
 }
 
 func (ss *spaceShip) deletable() bool {
-	return false
+	return ss.hp <= 0
 }
 
 func (ss *spaceShip) inFrame() {

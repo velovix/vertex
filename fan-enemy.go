@@ -71,6 +71,8 @@ func (fe *fanEnemy) tick() []entity {
 		fe.rot = 0
 	}
 
+	fe.updateCols()
+
 	return []entity{}
 }
 

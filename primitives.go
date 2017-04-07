@@ -19,6 +19,10 @@ type bounding struct {
 	a, b vertex
 }
 
+func toRadians(degrees float64) float64 {
+	return degrees * (math.Pi / 180.0)
+}
+
 func (a vertex) distance(b vertex) float64 {
 	return math.Sqrt(math.Pow(b.x-a.x, 2) + math.Pow(b.y-a.y, 2))
 }
@@ -39,6 +43,22 @@ func normalize(v vertex) vertex {
 		z: v.z / sum}
 }
 
+func rotateVertex(center, rotatable vertex, angle float64) vertex {
+	s := math.Sin(toRadians(angle))
+	c := math.Cos(toRadians(angle))
+
+	rotatable.x -= center.x
+	rotatable.y -= center.y
+
+	rotatedX := rotatable.x*c - rotatable.y*s
+	rotatedY := rotatable.x*s + rotatable.y*c
+
+	rotatable.x = rotatedX + center.x
+	rotatable.y = rotatedY + center.y
+
+	return rotatable
+}
+
 func unitVectorFromAngle(angle float64) vertex {
 	v := vertex{}
 
@@ -57,4 +77,13 @@ func unitVectorFromAngle(angle float64) vertex {
 	}
 
 	return v
+}
+
+func angleFromUnitVector(v vertex) float64 {
+	angle := (180.0 / math.Pi) * math.Atan2(v.y, v.x)
+	if angle < 0.0 {
+		angle = 360 + angle
+	}
+
+	return angle
 }

@@ -11,6 +11,11 @@ import (
 	"github.com/pkg/errors"
 )
 
+const (
+	playAreaWidth  = defaultWidth * 2
+	playAreaHeight = defaultHeight * 2
+)
+
 // titleReg is the entity registry to be used during the title screen
 var titleReg entityRegistry
 
@@ -33,8 +38,7 @@ func main() {
 	defer glfw.Terminate()
 
 	for _, joy := range connectedJoysticks() {
-		_ = joy
-		// Add a space ship
+		gameplayReg.addEntity(newSpaceShipListener(joy))
 	}
 
 	// Create a GLFW window
@@ -57,15 +61,17 @@ func main() {
 	}
 
 	gameplayReg.addEntity(&mainCamera)
-	gameplayReg.addEntity(newGrid(defaultWidth*2, defaultHeight*2))
-	gameplayReg.addEntity(newSpaceShip())
-	gameplayReg.addEntity(newFanEnemy(vertex{0, 0, 0}))
+	gameplayReg.addEntity(newGrid(playAreaWidth, playAreaHeight))
+	gameplayReg.addEntity(newFanEnemy(vertex{300, 300, 0}))
+	gameplayReg.addEntity(newBoundaries(playAreaWidth, playAreaHeight))
+	gameplayReg.addEntity(&enemySpawner{})
 
 	currentReg = &gameplayReg
 
 	for !glfwWin.ShouldClose() {
 		drawFrame(glfwWin)
 		tick()
+		pollJoysticks()
 
 		mainWindow.calcDelta()
 
@@ -89,6 +95,26 @@ func drawFrame(window *glfw.Window) {
 	gl.PopMatrix()
 
 	window.SwapBuffers()
+}
+
+// pollJoysticks polls for Joystick events ant notifies the current entity
+// registry.
+func pollJoysticks() error {
+	for _, joy := range connectedJoysticks() {
+		axes, err := glfw.GetJoystickAxes(joy)
+		if err != nil {
+			return err
+		}
+		currentReg.joystickAxisEvent(joy, axes)
+
+		buttons, err := glfw.GetJoystickButtons(joy)
+		if err != nil {
+			return err
+		}
+		currentReg.joystickButtonEvent(joy, buttons)
+	}
+
+	return nil
 }
 
 // initGL initializes OpenGL with our configurations.
