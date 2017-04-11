@@ -1,6 +1,6 @@
 package main
 
-import "github.com/go-gl/glfw/v3.0/glfw"
+import "github.com/go-gl/glfw/v3.2/glfw"
 
 const (
 	defaultWidth  = 1280

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/go-gl/gl/v2.1/gl"
-	"github.com/go-gl/glfw/v3.0/glfw"
+	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/lukevers/glu"
 	"github.com/pkg/errors"
 )
@@ -31,9 +31,9 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 
 	// Initialize GLFW
-	success := glfw.Init()
-	if !success {
-		panic("failed to initialize GLFW")
+	err := glfw.Init()
+	if err != nil {
+		panic("failed to initialize GLFW " + err.Error())
 	}
 	defer glfw.Terminate()
 
@@ -101,16 +101,10 @@ func drawFrame(window *glfw.Window) {
 // registry.
 func pollJoysticks() error {
 	for _, joy := range connectedJoysticks() {
-		axes, err := glfw.GetJoystickAxes(joy)
-		if err != nil {
-			return err
-		}
+		axes := glfw.GetJoystickAxes(joy)
 		currentReg.joystickAxisEvent(joy, axes)
 
-		buttons, err := glfw.GetJoystickButtons(joy)
-		if err != nil {
-			return err
-		}
+		buttons := glfw.GetJoystickButtons(joy)
 		currentReg.joystickButtonEvent(joy, buttons)
 	}
 
