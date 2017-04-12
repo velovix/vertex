@@ -31,16 +31,10 @@ var lastButtons map[glfw.Joystick][]byte
 // registry.
 func pollJoysticks() error {
 	for _, joy := range connectedJoysticks() {
-		axes, err := glfw.GetJoystickAxes(joy)
-		if err != nil {
-			return err
-		}
+		axes := glfw.GetJoystickAxes(joy)
 		currentReg.joystickAxisEvent(joy, axes)
 
-		buttons, err := glfw.GetJoystickButtons(joy)
-		if err != nil {
-			return err
-		}
+		buttons := glfw.GetJoystickButtons(joy)
 		// Only notify about buttons if they've changed
 		if !bytes.Equal(buttons, lastButtons[joy]) {
 			currentReg.joystickButtonEvent(joy, buttons)

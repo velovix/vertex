@@ -1,5 +1,5 @@
 {
-    "memo": "dcc5d23d40951c7d95a72bbcdb8a269e2fb6121f30a528e730fc2a749f876013",
+    "memo": "bb13a50c7a25c12c94069d1637b092022791787095f9a4ebd7760854ea078e8c",
     "projects": [
         {
             "name": "github.com/go-gl/gl",
@@ -14,7 +14,7 @@
             "branch": "master",
             "revision": "4ac11c9fc37480dabfb399c2f9c8731689cee416",
             "packages": [
-                "v3.0/glfw"
+                "v3.2/glfw"
             ]
         },
         {
@@ -35,10 +35,18 @@
         },
         {
             "name": "github.com/pkg/errors",
-            "version": "v0.8.0",
-            "revision": "645ef00459ed84a119197bfb8d8205042c6df63d",
+            "branch": "master",
+            "revision": "ff09b135c25aae272398c51a07235b90a75aa4f0",
             "packages": [
                 "."
+            ]
+        },
+        {
+            "name": "github.com/veandco/go-sdl2",
+            "branch": "master",
+            "revision": "424dfac35026148a08f1b626cf1b1b3f35880a17",
+            "packages": [
+                "sdl_mixer"
             ]
         }
     ]
