@@ -3,7 +3,7 @@ package main
 import (
 	"math"
 
-	"github.com/go-gl/glfw/v3.0/glfw"
+	"github.com/go-gl/glfw/v3.2/glfw"
 )
 
 const (

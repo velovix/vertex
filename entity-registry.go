@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/go-gl/glfw/v3.0/glfw"
+	"github.com/go-gl/glfw/v3.2/glfw"
 )
 
 // currentReg holds the in-focus entity registry.

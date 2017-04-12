@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/go-gl/gl/v2.1/gl"
-	"github.com/go-gl/glfw/v3.0/glfw"
+	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/lukevers/glu"
 	"github.com/pkg/errors"
 )
@@ -36,9 +36,9 @@ func main() {
 	}
 
 	// Initialize GLFW
-	success := glfw.Init()
-	if !success {
-		panic("failed to initialize GLFW")
+	err := glfw.Init()
+	if err != nil {
+		panic("failed to initialize GLFW " + err.Error())
 	}
 	defer glfw.Terminate()
 
