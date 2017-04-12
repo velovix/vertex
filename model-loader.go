@@ -18,5 +18,10 @@ func loadModels() error {
 		return err
 	}
 
+	titleModel, err = loadObjFile("resources/title.obj")
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

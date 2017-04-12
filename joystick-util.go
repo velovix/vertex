@@ -1,6 +1,10 @@
 package main
 
-import "github.com/go-gl/glfw/v3.0/glfw"
+import (
+	"bytes"
+
+	"github.com/go-gl/glfw/v3.0/glfw"
+)
 
 // supportedJoysticks is a list of all potential joysticks that can be
 // connected.
@@ -18,4 +22,35 @@ func connectedJoysticks() []glfw.Joystick {
 	}
 
 	return output
+}
+
+// lastButtons contains the button values of all joysticks last check.
+var lastButtons map[glfw.Joystick][]byte
+
+// pollJoysticks polls for Joystick events ant notifies the current entity
+// registry.
+func pollJoysticks() error {
+	for _, joy := range connectedJoysticks() {
+		axes, err := glfw.GetJoystickAxes(joy)
+		if err != nil {
+			return err
+		}
+		currentReg.joystickAxisEvent(joy, axes)
+
+		buttons, err := glfw.GetJoystickButtons(joy)
+		if err != nil {
+			return err
+		}
+		// Only notify about buttons if they've changed
+		if !bytes.Equal(buttons, lastButtons[joy]) {
+			currentReg.joystickButtonEvent(joy, buttons)
+			lastButtons[joy] = buttons
+		}
+	}
+
+	return nil
+}
+
+func init() {
+	lastButtons = make(map[glfw.Joystick][]byte)
 }

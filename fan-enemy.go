@@ -27,6 +27,8 @@ type fanEnemy struct {
 	rot     float64
 	moveDir vertex
 
+	spawnScaling vertex
+
 	hp int
 
 	harmful, vulnerability collision
@@ -71,6 +73,16 @@ func (fe *fanEnemy) tick() []entity {
 		fe.rot = 0
 	}
 
+	// Make the fan enemy scale up to full size on creation
+	if fe.spawnScaling.x < 1.0 {
+		fe.spawnScaling.x += 0.05 * mainWindow.delta
+		fe.spawnScaling.y += 0.05 * mainWindow.delta
+		fe.spawnScaling.z += 0.05 * mainWindow.delta
+		if fe.spawnScaling.x > 1.0 {
+			fe.spawnScaling = vertex{1, 1, 1}
+		}
+	}
+
 	fe.updateCols()
 
 	return []entity{}
@@ -82,6 +94,8 @@ func (fe *fanEnemy) draw() {
 	rotateOnPoint(fe.rot, fe.loc)
 	gl.Translated(fe.loc.x, fe.loc.y, 0.0)
 	gl.Scaled(fanEnemyScale.x, fanEnemyScale.y, fanEnemyScale.z)
+	gl.Scaled(pulseScale.x, pulseScale.y, pulseScale.z)
+	gl.Scaled(fe.spawnScaling.x, fe.spawnScaling.y, fe.spawnScaling.z)
 
 	fanEnemyModel.draw()
 
@@ -95,8 +109,18 @@ func (fe *fanEnemy) collision(yours, other collision) {
 		if is, dir := fe.isBouncer(yours); is {
 			if dir == up || dir == down {
 				fe.moveDir.y = -fe.moveDir.y
+				if fe.moveDir.y > 0 {
+					fe.loc.y += 2.5
+				} else {
+					fe.loc.y -= 2.5
+				}
 			} else {
 				fe.moveDir.x = -fe.moveDir.x
+				if fe.moveDir.x > 0 {
+					fe.loc.x += 2.5
+				} else {
+					fe.loc.x -= 2.5
+				}
 			}
 		}
 	case harmful:

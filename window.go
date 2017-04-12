@@ -1,6 +1,8 @@
 package main
 
-import "github.com/go-gl/glfw/v3.0/glfw"
+import (
+	"github.com/go-gl/glfw/v3.0/glfw"
+)
 
 const (
 	defaultWidth  = 1280
@@ -19,11 +21,17 @@ type window struct {
 }
 
 func (w *window) calcDelta() {
-	currFrame := glfw.GetTime()
+	if w.lastFrame == 0.0 {
+		// There hasn't been a frame to compare this one to, assume delta of 1
+		w.lastFrame = glfw.GetTime()
+		w.delta = 1.0
+	} else {
+		currFrame := glfw.GetTime()
 
-	w.delta = (currFrame - w.lastFrame) / targetSPF
+		w.delta = (currFrame - w.lastFrame) / targetSPF
 
-	w.lastFrame = currFrame
+		w.lastFrame = currFrame
+	}
 }
 
 var mainWindow window = window{

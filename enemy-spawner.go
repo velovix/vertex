@@ -1,22 +1,55 @@
 package main
 
-import "time"
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+const (
+	spawnDistFromEntities = 150
+	spawnInterval         = time.Second
+)
 
 type enemySpawner struct {
 	uidGenerator
-	lastSpawn time.Time
+	spawnTicker <-chan time.Time
+}
+
+func newEnemySpawner() *enemySpawner {
+	es := new(enemySpawner)
+
+	es.spawnTicker = time.Tick(spawnInterval)
+
+	return es
 }
 
 func (es *enemySpawner) tick() []entity {
 	var newEnts []entity
 
-	if time.Since(es.lastSpawn) > 6*time.Second {
-		newEnts = append(newEnts, newFanEnemy(vertex{500, 500, 0}))
-		newEnts = append(newEnts, newFanEnemy(vertex{-500, 500, 0}))
-		newEnts = append(newEnts, newFanEnemy(vertex{500, -500, 0}))
-		newEnts = append(newEnts, newFanEnemy(vertex{-500, -500, 0}))
+	select {
+	case <-es.spawnTicker:
+		var done bool
+		var loc vertex
+		var tries int
+		for !done {
+			loc = vertex{
+				(rand.Float64()*2.0 - 1.0) * (playAreaWidth / 2.0),
+				(rand.Float64()*2.0 - 1.0) * (playAreaHeight / 2.0),
+				0.0}
+			done = true
 
-		es.lastSpawn = time.Now()
+			for _, pe := range currentReg.physicals {
+				if pe.location().distance(loc) < spawnDistFromEntities {
+					done = false
+				}
+			}
+			tries++
+		}
+
+		newEnts = append(newEnts, newFanEnemy(loc))
+		fmt.Println("Spawned an enemy, took", tries, "tries")
+	default:
 	}
 
 	return newEnts

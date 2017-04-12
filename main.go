@@ -2,6 +2,7 @@ package main
 
 import (
 	"math/rand"
+	"os"
 	"runtime"
 	"time"
 
@@ -29,6 +30,10 @@ func init() {
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
+
+	if len(os.Args) > 1 && os.Args[1] == "muted" {
+		musicMuted = true
+	}
 
 	// Initialize GLFW
 	success := glfw.Init()
@@ -59,18 +64,27 @@ func main() {
 	if err != nil {
 		panic(errors.Wrap(err, "loading models"))
 	}
+	err = loadAudio()
+	if err != nil {
+		panic(errors.Wrap(err, "loading music"))
+	}
+
+	titleReg.addEntity(newTitle())
 
 	gameplayReg.addEntity(&mainCamera)
 	gameplayReg.addEntity(newGrid(playAreaWidth, playAreaHeight))
-	gameplayReg.addEntity(newFanEnemy(vertex{300, 300, 0}))
 	gameplayReg.addEntity(newBoundaries(playAreaWidth, playAreaHeight))
-	gameplayReg.addEntity(&enemySpawner{})
+	gameplayReg.addEntity(newEnemySpawner())
 
-	currentReg = &gameplayReg
+	currentReg = &titleReg
+
+	resetPulse()
+	playMusic(titleMusic, 3*time.Second)
 
 	for !glfwWin.ShouldClose() {
 		drawFrame(glfwWin)
 		tick()
+		updatePulse()
 		pollJoysticks()
 
 		mainWindow.calcDelta()
@@ -95,26 +109,6 @@ func drawFrame(window *glfw.Window) {
 	gl.PopMatrix()
 
 	window.SwapBuffers()
-}
-
-// pollJoysticks polls for Joystick events ant notifies the current entity
-// registry.
-func pollJoysticks() error {
-	for _, joy := range connectedJoysticks() {
-		axes, err := glfw.GetJoystickAxes(joy)
-		if err != nil {
-			return err
-		}
-		currentReg.joystickAxisEvent(joy, axes)
-
-		buttons, err := glfw.GetJoystickButtons(joy)
-		if err != nil {
-			return err
-		}
-		currentReg.joystickButtonEvent(joy, buttons)
-	}
-
-	return nil
 }
 
 // initGL initializes OpenGL with our configurations.
