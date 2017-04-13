@@ -1,5 +1,5 @@
 {
-    "memo": "bb13a50c7a25c12c94069d1637b092022791787095f9a4ebd7760854ea078e8c",
+    "memo": "53b7114d45cb1001032d565a679e3b1fa01c2eb27bf2f83c69d5b9c7188efcff",
     "projects": [
         {
             "name": "github.com/go-gl/gl",
@@ -35,8 +35,8 @@
         },
         {
             "name": "github.com/pkg/errors",
-            "branch": "master",
-            "revision": "ff09b135c25aae272398c51a07235b90a75aa4f0",
+            "version": "v0.8.0",
+            "revision": "3866ebc348c54054262feae422da428fe6cf147d",
             "packages": [
                 "."
             ]
