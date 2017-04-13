@@ -24,7 +24,8 @@ func toRadians(degrees float64) float64 {
 }
 
 func (a vertex) distance(b vertex) float64 {
-	return math.Sqrt(math.Pow(b.x-a.x, 2) + math.Pow(b.y-a.y, 2))
+	// Used to use math.Pow here, but this is much faster
+	return math.Sqrt(((b.x - a.x) * (b.x - a.x)) + ((b.y - a.y) * (b.y - a.y)))
 }
 
 func (a vertex) subtract(b vertex) vertex {
