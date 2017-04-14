@@ -1,0 +1,37 @@
+memo = "0dfbe140eff9c59f1ce5dd6554a6d6a1d4789437db3c7674798bca7a9647a03a"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/go-gl/gl"
+  packages = ["v2.1/gl"]
+  revision = "b303bcb3e83b7ef645a5104e1c2db7f8d9e8918a"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/go-gl/glfw"
+  packages = ["v3.2/glfw"]
+  revision = "4ac11c9fc37480dabfb399c2f9c8731689cee416"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/lukevers/glu"
+  packages = ["."]
+  revision = "f41f378fc8c16d306ece7bc2a4f8ba1b86280640"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/peterhellberg/wavefront"
+  packages = ["."]
+  revision = "3dce7c0fdfb4f4212d32f317b9539ef83a950fdd"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  revision = "ff09b135c25aae272398c51a07235b90a75aa4f0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/veandco/go-sdl2"
+  packages = ["sdl","sdl_mixer"]
+  revision = "424dfac35026148a08f1b626cf1b1b3f35880a17"
