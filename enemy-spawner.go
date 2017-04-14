@@ -9,6 +9,7 @@ import (
 const (
 	spawnDistFromEntities = 150
 	spawnInterval         = time.Second
+	spawnBorder           = 40.0
 )
 
 type enemySpawner struct {
@@ -34,8 +35,8 @@ func (es *enemySpawner) tick() []entity {
 		var tries int
 		for !done {
 			loc = vertex{
-				(rand.Float64()*2.0 - 1.0) * (playAreaWidth / 2.0),
-				(rand.Float64()*2.0 - 1.0) * (playAreaHeight / 2.0),
+				(rand.Float64()*2.0 - 1.0) * ((playAreaWidth - spawnBorder) / 2.0),
+				(rand.Float64()*2.0 - 1.0) * ((playAreaHeight - spawnBorder) / 2.0),
 				0.0}
 			done = true
 

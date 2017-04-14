@@ -43,11 +43,11 @@ func (ssl *spaceShipListener) joystickAxis(joystick glfw.Joystick, axes []float3
 	}
 
 	// Use controller axes 2 and 3 for aiming
-	if math.Abs(float64(axes[3])) > joystickSensitivity ||
-		math.Abs(float64(axes[4])) > joystickSensitivity {
+	if math.Abs(float64(axes[2])) > joystickSensitivity ||
+		math.Abs(float64(axes[3])) > joystickSensitivity {
 		ssl.rot = angleFromUnitVector(vertex{
-			float64(axes[3]),
-			float64(-axes[4]),
+			float64(axes[2]),
+			float64(-axes[3]),
 			0.0})
 	}
 }
