@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 )
@@ -32,7 +31,6 @@ func (es *enemySpawner) tick() []entity {
 	case <-es.spawnTicker:
 		var done bool
 		var loc vertex
-		var tries int
 		for !done {
 			loc = vertex{
 				(rand.Float64()*2.0 - 1.0) * ((playAreaWidth - spawnBorder) / 2.0),
@@ -45,11 +43,9 @@ func (es *enemySpawner) tick() []entity {
 					done = false
 				}
 			}
-			tries++
 		}
 
 		newEnts = append(newEnts, newFanEnemy(loc))
-		fmt.Println("Spawned an enemy, took", tries, "tries")
 	default:
 	}
 
