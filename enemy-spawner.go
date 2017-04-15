@@ -8,7 +8,7 @@ import (
 const (
 	spawnDistFromEntities = 150
 	spawnInterval         = time.Second
-	spawnBorder           = 40.0
+	spawnBorder           = 80.0
 )
 
 type enemySpawner struct {

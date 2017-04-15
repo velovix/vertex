@@ -24,7 +24,7 @@ func newBoundaries(width, height float64) *boundaries {
 	b.cols[down] = collision{
 		bounding: bounding{
 			vertex{-width / 2.0, -height/2.0 - boundariesSize, 0.0},
-			vertex{width / 2.0, -height/2.0 + boundariesSize, 0.0}},
+			vertex{width / 2.0, -height / 2.0, 0.0}},
 		alliance: unaligned,
 		typ:      bouncer}
 	b.cols[left] = collision{

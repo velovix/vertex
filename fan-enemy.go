@@ -124,6 +124,9 @@ func (fe *fanEnemy) collision(yours, other collision) {
 			}
 		}
 	case harmful:
+		if yours.uid() == fe.harmful.uid() && other.alliance == unfriendly {
+			fe.hp = 0
+		}
 		// Take damange if under opposing fire
 		if yours.uid() == fe.vulnerability.uid() && other.alliance != unfriendly {
 			fe.hp--
