@@ -44,7 +44,7 @@ func (c *camera) tick() []entity {
 		} else {
 			zScaling.x = 1
 		}
-		if max.y-min.y < float64(mainWindow.height)/2.0 {
+		if max.y-min.y > float64(mainWindow.height)/2.0 {
 			zScaling.y = (max.y - min.y) / (float64(mainWindow.height) / 2.0)
 		} else {
 			zScaling.y = 1

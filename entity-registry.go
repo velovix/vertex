@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/go-gl/glfw/v3.2/glfw"
 )
 
@@ -88,6 +90,9 @@ func (er *entityRegistry) interact(pe1 physicalEntity, pe2 physicalEntity) {
 	for _, c1 := range cols1 {
 		for _, c2 := range cols2 {
 			if collides(c1, c2) {
+				if c1.uid() == coolGuyCol || c2.uid() == coolGuyCol {
+					fmt.Println("So it's being interacted with")
+				}
 				pe1.collision(c1, c2)
 				pe2.collision(c2, c1)
 			}

@@ -7,12 +7,13 @@ import (
 )
 
 var (
-	fanEnemySize        = 60.0
-	fanEnemyMoveBoxSize = 13.0 // TODO(velovix): Remember what this represents
-	fanEnemyMaxHP       = 5
-	fanEnemySpeed       = 2.5
-	fanEnemyRotSpeed    = 1.0
-	fanEnemyMass        = 1.5
+	fanEnemySize              = 60.0
+	fanEnemyMoveBoxSize       = 13.0 // TODO(velovix): Remember what this represents
+	fanEnemyMaxHP             = 5
+	fanEnemySpeed             = 2.5
+	fanEnemyRotSpeed          = 1.0
+	fanEnemyMass              = 1.5
+	fanEnemySpawnScalingSpeed = 0.05
 
 	fanEnemyScale = vertex{25, 25, 25}
 	fanEnemyModel polyModel
@@ -75,9 +76,9 @@ func (fe *fanEnemy) tick() []entity {
 
 	// Make the fan enemy scale up to full size on creation
 	if fe.spawnScaling.x < 1.0 {
-		fe.spawnScaling.x += 0.05 * mainWindow.delta
-		fe.spawnScaling.y += 0.05 * mainWindow.delta
-		fe.spawnScaling.z += 0.05 * mainWindow.delta
+		fe.spawnScaling.x += fanEnemySpawnScalingSpeed * mainWindow.delta
+		fe.spawnScaling.y += fanEnemySpawnScalingSpeed * mainWindow.delta
+		fe.spawnScaling.z += fanEnemySpawnScalingSpeed * mainWindow.delta
 		if fe.spawnScaling.x > 1.0 {
 			fe.spawnScaling = vertex{1, 1, 1}
 		}
@@ -124,12 +125,17 @@ func (fe *fanEnemy) collision(yours, other collision) {
 			}
 		}
 	case harmful:
+		// Destroy fan enemies that are inside each other
 		if yours.uid() == fe.harmful.uid() && other.alliance == unfriendly {
 			fe.hp = 0
 		}
 		// Take damange if under opposing fire
 		if yours.uid() == fe.vulnerability.uid() && other.alliance != unfriendly {
 			fe.hp--
+		}
+	case deadly:
+		if yours.uid() == fe.harmful.uid() && other.alliance != unfriendly {
+			fe.hp = 0
 		}
 	}
 

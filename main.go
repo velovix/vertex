@@ -42,8 +42,12 @@ func main() {
 	}
 	defer glfw.Terminate()
 
+	// Add a player for every connected joystick
+	players := []*spaceShipListener{}
 	for _, joy := range connectedJoysticks() {
-		gameplayReg.addEntity(newSpaceShipListener(joy))
+		ssl := newSpaceShipListener(joy)
+		gameplayReg.addEntity(ssl)
+		players = append(players, ssl)
 	}
 
 	// Create a GLFW window
@@ -75,6 +79,7 @@ func main() {
 	gameplayReg.addEntity(newGrid(playAreaWidth, playAreaHeight))
 	gameplayReg.addEntity(newBoundaries(playAreaWidth, playAreaHeight))
 	gameplayReg.addEntity(newEnemySpawner())
+	gameplayReg.addEntity(newPlayerRespawner(players))
 
 	currentReg = &titleReg
 

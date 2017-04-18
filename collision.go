@@ -5,6 +5,7 @@ type collisionType int
 const (
 	bouncer collisionType = iota
 	harmful
+	deadly
 	vulnerable
 )
 
