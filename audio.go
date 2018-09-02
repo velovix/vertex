@@ -3,7 +3,7 @@ package main
 import (
 	"time"
 
-	mix "github.com/veandco/go-sdl2/sdl_mixer"
+	mix "github.com/veandco/go-sdl2/mix"
 )
 
 type music int
